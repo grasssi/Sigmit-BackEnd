@@ -1,0 +1,26 @@
+{
+  "name": "sigmit-backend",
+  "version": "1.0.0",
+  "description": "Last Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grasssi/Sigmit-BackEnd.git"
+  },
+  "keywords": [
+    "sigmit"
+  ],
+  "author": "Grassi Amine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grasssi/Sigmit-BackEnd/issues"
+  },
+  "homepage": "https://github.com/grasssi/Sigmit-BackEnd#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  }
+}
