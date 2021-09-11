@@ -25,9 +25,11 @@ app.use(express.json())
 // require routes 
 const userApi = require('./routes/userAPi');
 const authApi = require('./routes/authAPI');
+const minfoApi = require('./routes/minfoAPI');
 
 app.use('/api/v1', userApi);
 app.use('/api/v1', authApi);
+app.use('/api/v1', minfoApi);
 
 
 app.listen(port, () => {
