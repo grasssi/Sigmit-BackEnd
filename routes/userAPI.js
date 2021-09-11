@@ -60,29 +60,6 @@ catch (err) {
 }
 })
 
-// affect todo to user
-router.put('/users/affect/:idUser/:idTodo', async (req, res) => {
-    try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.idUser, {$push : {todos : req.params.idTodo}}, { new: true })
-        res.json(updatedUser);
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
-// desafect id to user
-router.put('/users/desaffect/:idUser/:idTodo', async (req, res) => {
-    try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.idUser, {$pull : {todos : req.params.idTodo}}, { new: true })
-        res.json(updatedUser);
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
-
 // get all user
 router.get('/users-with-todos', async (req, res) => {
     try {
