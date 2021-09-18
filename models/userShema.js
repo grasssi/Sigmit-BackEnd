@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     firstName: { type: String, required: true },
-    lastName: String,
-    age: Number,
+    lastName: { type: String, required: false },
+    age: { type: String, required: false },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    todos: [{type: Schema.Types.ObjectId, ref: 'todo'}]
+    role: { type: String, required: true , default: 'user'},
 }, {
     versionKey: false,
     timestamps: true
