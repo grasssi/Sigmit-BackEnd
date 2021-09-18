@@ -35,12 +35,13 @@ router.post("/login", async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
         if (user) {
-            const cmp = await bcrypt.compare(req.body.password, user.password);
-            if (cmp) {
+            const compaire = await bcrypt.compare(req.body.password, user.password);
+            if (compaire) {
                 //  create of jwt token 
                 const tokenData = {
                     userId: user._id,
-                    email: user.email
+                    email: user.email,
+                    role: user.role
                 }
                 const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
                 res.send({ message: 'Auth Successfully', token: token });

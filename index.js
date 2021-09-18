@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 //Require to use .env
 require('dotenv').config()
@@ -15,12 +16,18 @@ require('./database/connect')
 
 //BearerStrategy with passport
 require('./passport/bearerStrategy')
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 // config body parser
 app.use(express.json())
+
+// cors
+app.use(cors()) 
+
+app.get('/', (req, res) => {
+  res.send({mesage : 'Hello World!'})
+})
+
+
 
 // require routes 
 const userApi = require('./routes/userAPi');
@@ -35,5 +42,5 @@ app.use('/api/v1', baseApi);
 
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Application listening at http://localhost:${port}`)
 })
