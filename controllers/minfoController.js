@@ -3,13 +3,13 @@ const Minfo = require('../models/minfoSchema')
 //add one materiel Contoller
 exports.addMinfo = async (req, res) => {
     try {
-    const createdMateriel = await Minfo.create(req.body)
-    res.json(createdMateriel);
-}
-catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Internal server error' });
-}
+        const createdMateriel = await Minfo.create(req.body)
+        res.json(createdMateriel);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 //remove by Id materiel Contoller
@@ -40,23 +40,23 @@ exports.allMinfos = async (req, res) => {
 //update Meteriel by id controller
 exports.updateMinfo = async (req, res) => {
     try {
-  const updatedMinfo = await Minfo.findByIdAndUpdate(req.params.id, req.body, { new: true })
-  res.json(updatedMinfo);
-}
-catch (err) {
-  console.log(err);
-  res.status(500).json({ message: 'Internal server error' });
-}
+        const updatedMinfo = await Minfo.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        res.json(updatedMinfo);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 //Get materiel By id contoller
 exports.getMinfo = async (req, res) => {
     try {
-    const minfo = await Minfo.findById(req.params.id)
-    res.json(minfo);
-}
-catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Internal server error' });
-}
+        const minfo = await Minfo.findById(req.params.id)
+        res.json(minfo);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }

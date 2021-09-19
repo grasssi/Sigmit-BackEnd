@@ -40,23 +40,23 @@ exports.allBases = async (req, res) => {
 //update base by id controller
 exports.updateBase = async (req, res) => {
     try {
-  const updatedBase = await Base.findByIdAndUpdate(req.params.id, req.body, { new: true })
-  res.json(updatedBase);
-}
-catch (err) {
-  console.log(err);
-  res.status(500).json({ message: 'Internal server error' });
-}
+        const updatedBase = await Base.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        res.json(updatedBase);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 //Get base By id contoller
 exports.getbase = async (req, res) => {
     try {
-    const base = await Base.findById(req.params.id)
-    res.json(base);
-}
-catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Internal server error' });
-}
+        const base = await Base.findById(req.params.id)
+        res.json(base);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
