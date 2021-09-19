@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
 // reuire model
-const Base = require('../models/baseSchema')
+const baseContollers = require(('../controllers/baseContollers'));
 // add one base
-router.post('/bases', async (req, res) => {
-    try {
-    const createdBase = await Base.create(req.body)
-    res.json(createdBase);
-}
-catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Internal server error' });
-}
-})
-
+router.post('/AddBase',baseContollers.addBase)
+// Remove one base
+router.delete('/RemoveBase/:id',baseContollers.removeBase)
 module.exports = router;
+//get all bases
+router.get('/AllBases',baseContollers.allBases)
+// update base by id
+router.put('/UpdateBase/:id',baseContollers.updateBase)
+//get base by id
+router.get('/GetBase/:id',baseContollers.getbase)

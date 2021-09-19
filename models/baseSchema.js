@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const baseSchema = new Schema({
-    nomBase: { type: String, required: true },
+    nomBase: { type: String, required: true,unique:true},
   }, {
     versionKey: false,
     timestamps: true
