@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 // reuire model
-const baseContollers = require(('../controllers/baseContollers'));
+const baseContoller = require(('../controllers/baseContollers'));
 // add one base
-router.post('/AddBase',baseContollers.addBase)
+router.post('/addbase',baseContoller.addBase)
 // Remove one base
-router.delete('/RemoveBase/:id',baseContollers.removeBase)
-module.exports = router;
+router.delete('/removebase/:id',baseContoller.removeBase)
 //get all bases
-router.get('/AllBases',baseContollers.allBases)
+router.get('/allbases',baseContoller.allBases)
 // update base by id
-router.put('/UpdateBase/:id',baseContollers.updateBase)
+router.put('/updatebase/:id',baseContoller.updateBase)
 //get base by id
-router.get('/GetBase/:id',baseContollers.getbase)
+router.get('/getbase/:id',baseContoller.getbase)
+
+module.exports = router;
