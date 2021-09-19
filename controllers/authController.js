@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
 }
 
 // register controller 
-exports.register =  async (req, res) => {
+exports.register = async (req, res) => {
     try {
         const userFound = await User.findOne({ email: req.body.email });
         if (userFound) {
