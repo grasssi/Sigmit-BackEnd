@@ -113,14 +113,15 @@ exports.resetPassword = async (req, res) => {
                 if (err) {
                     return res.status(401).json({ error: 'invalid token or it is expired' })
                 }
-                User.findOne({resetlink}, (err, user) => {
+                User.findOne({ resetlink }, (err, user) => {
                     if (err || !user) {
                         console.log(err)
 
                         return res.status(400).json({ error: "user with this token does not exist" })
                     }
                     const obj = {
-                        password: newPass
+                        password: newPass,
+                        resetlink: ''
                     }
                     user = _.extend(user, obj);
                     user.save((err, result) => {
