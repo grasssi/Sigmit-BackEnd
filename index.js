@@ -1,12 +1,21 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const flash = require('connect-flash');//?
+const session = require('express-session');//?
 
 //Require to use .env
 require('dotenv').config()
 
 const app = express()
 const port = 3000
+
+app.use(session({ cookie: { maxAge: 60000 }, 
+                  secret: 'woot',
+                  resave: false, 
+                  saveUninitialized: false}));
+
+
 
 //Morgan Config
 app.use(morgan('dev'))
@@ -26,7 +35,8 @@ app.use(cors())
 app.get('/', (req, res) => {
   res.send({mesage : 'Hello World!'})
 })
-
+//flash
+app.use(flash());
 
 
 // require routes 
@@ -34,11 +44,17 @@ const userApi = require('./routes/userAPi');
 const authApi = require('./routes/authAPI');
 const minfoApi = require('./routes/minfoAPI');
 const baseApi = require('./routes/baseAPI');
+//const forgotApi = require('./routes/forgotAPI');
+//const forgotApi2 = require('./routes/forgotAPI2');
+const forgotApi3 = require('./routes/forgotAPI3');
 
 app.use('/api/v1', userApi);
 app.use('/api/v1', authApi);
 app.use('/api/v1', minfoApi);
 app.use('/api/v1', baseApi);
+//app.use('/api/v1', forgotApi);
+//app.use('/api/v1', forgotApi2);
+app.use('/api/v1', forgotApi3);
 
 
 app.listen(port, () => {
