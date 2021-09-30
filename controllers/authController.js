@@ -7,6 +7,10 @@ const _ = require('lodash')
 const bcrypt = require('bcrypt');
 //require nodemailer
 const nodemailer = require('nodemailer');
+
+const path = require('path');
+const fs = require('fs');
+const ejs = require('ejs')
 //vreate the transporter
 const transporter = nodemailer.createTransport({
     port: 465,
@@ -52,7 +56,7 @@ exports.register = async (req, res) => {
         if (userFound) {
             res.send({ message: 'email already exist, please choose another email' })
         } else {
-            console.log(req.body.password);          
+            console.log(req.body.password);
             const hashedPwd = await bcrypt.hash(req.body.password, 10);
             console.log(hashedPwd);
             const createdUser = await User.create({
@@ -71,10 +75,10 @@ exports.register = async (req, res) => {
     }
 }
 //forgot password controller
-exports.forgotPassword = async (req, res) => {
+exports.forgotPassword2 = async (req, res) => {
     const { email } = req.body
-       try {
-        const user = await User.findOne({email});
+    try {
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ error: "email does not exist" })
         }
@@ -85,7 +89,7 @@ exports.forgotPassword = async (req, res) => {
             subject: 'Node.js Password Reset',
             text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-                + process.env.CLIENT_URL+'/'+ token + '\n\n' +
+                + process.env.CLIENT_URL + '/' + token + '\n\n' +
                 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
         };
         return user.updateOne({ resetlink: token }, async (err, success) => {
@@ -139,5 +143,51 @@ exports.resetPassword = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server error Occured");
+    }
+}
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: "email does not exist" })
+        }
+        const token = jwt.sign({ _Id: user._id, }, process.env.RESET_PASSWORD_KEY, { expiresIn: process.env.JWT_EXPIRE });
+        const name = user.firstName;
+        // 1. read template path 
+        const templatePath = path.resolve('./mail_templates', 'Notification_v2.html');
+        // 2. read template content 
+        const content = fs.readFileSync(templatePath, { encoding: 'utf-8' });
+
+        const mailData = {
+            from: 'AngularGrassi@gmail.com',
+            to: email,
+            subject: 'subject',
+            html: ejs.render(content, { token,name,email })
+        };
+
+        const info = await transporter.sendMail(mailData);
+        res.send({ message: "html send", message_id: info.messageId });
+        return user.updateOne({ resetlink: token }, async (err, success) => {
+            try {
+                {
+                    const info = await transporter.sendMail(data, (error, body) => {
+                        if (error) {
+                            return res.json({ error: err.message })
+                        } else
+                            res.json({ message: 'html send' });
+                    });
+                }
+            }
+            catch (err) {
+                console.log(err);
+                return res.status(400).json({ error: "reset password link error" })
+            }
+        })
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
