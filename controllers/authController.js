@@ -18,7 +18,6 @@ const transporter = nodemailer.createTransport({
     secure: true, // upgrades later with STARTTLS -- change this based on the PORT
 });
 
-
 // login controller
 exports.login = async (req, res) => {
     try {
@@ -53,7 +52,9 @@ exports.register = async (req, res) => {
         if (userFound) {
             res.send({ message: 'email already exist, please choose another email' })
         } else {
+            console.log(req.body.password);          
             const hashedPwd = await bcrypt.hash(req.body.password, 10);
+            console.log(hashedPwd);
             const createdUser = await User.create({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -72,8 +73,8 @@ exports.register = async (req, res) => {
 //forgot password controller
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body
-    try {
-        const user = await User.findOne({ email });
+       try {
+        const user = await User.findOne({email});
         if (!user) {
             return res.status(400).json({ error: "email does not exist" })
         }
@@ -84,7 +85,7 @@ exports.forgotPassword = async (req, res) => {
             subject: 'Node.js Password Reset',
             text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-                + process.env.CLIENT_URL + '/reset/' + token + '\n\n' +
+                + process.env.CLIENT_URL+'/'+ token + '\n\n' +
                 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
         };
         return user.updateOne({ resetlink: token }, async (err, success) => {
