@@ -24,7 +24,6 @@ exports.removeMinfo = async (req, res) => {
     }
 }
 
-
 // get all Materiels 
 exports.allMinfos = async (req, res) => {
     try {
