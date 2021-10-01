@@ -3,19 +3,19 @@ const router = express.Router();
 // reuire controller
 const serviceContoller = require(('../controllers/serviceController'));
 
-// add one base
+// add one service
 router.post('/addservice', serviceContoller.addService)
 
-// Remove one base
+// Remove one service
 router.delete('/removeservice/:id', serviceContoller.removeService)
 
-//get all bases
+//get all services
 router.get('/allservices', serviceContoller.allServices)
 
-// update base by id
+// update service by id
 router.put('/updateservice/:id', serviceContoller.updateService)
 
-//get base by id
+//get service by id
 router.get('/getservice/:id', serviceContoller.getService)
 
 module.exports = router;
