@@ -9,12 +9,12 @@ router.post('/addminfo', MinfoController.addMinfo)
 // Remove one materiel
 router.delete('/removeminfo/:id', MinfoController.removeMinfo)
 
-//get all bases
+//get all materiels
 router.get('/allminfos', MinfoController.allMinfos)
 
-// update base by id
+// update materiel by id
 router.put('/updateminfo/:id', MinfoController.updateMinfo)
 
-//get base by id
+//get materiel by id
 router.get('/getminfo/:id', MinfoController.getMinfo)
 module.exports = router;
