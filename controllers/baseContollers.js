@@ -24,7 +24,6 @@ exports.removeBase = async (req, res) => {
     }
 }
 
-
 // get all bases 
 exports.allBases = async (req, res) => {
     try {

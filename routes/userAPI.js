@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 // reuire Controller
 const userController = require('../controllers/userConroller')
+
 // get all user
 router.get('/allusers', userController.allUsers)
+
 // add one user
 router.post('/adduser', userController.addUser)
+
 // update user by id
 router.put('/updateuser/:id', userController.updateUser)
+
 // delete user by id
 router.delete('/removeuser/:id', userController.removeUser)
 

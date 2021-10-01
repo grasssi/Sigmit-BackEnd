@@ -46,6 +46,7 @@ const minfoApi = require('./routes/minfoAPI');
 const baseApi = require('./routes/baseAPI');
 const forgotApi = require('./routes/forgotAPI');
 const ownerApi = require('./routes/ownerAPI');
+const serviceApi = require('./routes/serviceAPI');
 
 
 app.use('/api/v1', userApi);
@@ -54,6 +55,7 @@ app.use('/api/v1', minfoApi);
 app.use('/api/v1', baseApi);
 app.use('/api/v1', forgotApi);
 app.use('/api/v1', ownerApi);
+app.use('/api/v1', serviceApi);
 
 
 app.listen(port, () => {

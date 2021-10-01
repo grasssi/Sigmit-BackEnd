@@ -1,16 +1,18 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
+
 const Schema = mongoose.Schema;
 
 const ownerSchema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: false },
     email: { type: String, required: true, unique: true },
-    service: { type: String, required: true } 
+    service: { type: String, required: true }
 }, {
     versionKey: false,
     timestamps: true
 });
-
+ownerSchema.plugin(uniqueValidator)
 const owner = mongoose.model('owners', ownerSchema);
 
 module.exports = owner;
