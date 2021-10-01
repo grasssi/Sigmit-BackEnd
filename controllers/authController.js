@@ -11,7 +11,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 const ejs = require('ejs')
-//vreate the transporter
+//Create the transporter
 const transporter = nodemailer.createTransport({
     port: 465,
     host: "smtp.gmail.com",
@@ -21,6 +21,8 @@ const transporter = nodemailer.createTransport({
     },
     secure: true, // upgrades later with STARTTLS -- change this based on the PORT
 });
+
+
 
 // login controller
 exports.login = async (req, res) => {
@@ -38,10 +40,10 @@ exports.login = async (req, res) => {
                 const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
                 res.send({ message: 'Auth Successfully', token: token });
             } else {
-                res.send({ message: "Wrong email or password." });
+                res.send({ message: 'Wrong email or password1.' });
             }
         } else {
-            res.send({ message: "Wrong email or password." });
+            res.send({ message: "Wrong email or password.2" });
         }
     } catch (error) {
         console.log(error);
@@ -75,7 +77,7 @@ exports.register = async (req, res) => {
     }
 }
 //forgot password controller
-exports.forgotPassword2 = async (req, res) => {
+exports.forgotPassword_v2 = async (req, res) => {
     const { email } = req.body
     try {
         const user = await User.findOne({ email });
