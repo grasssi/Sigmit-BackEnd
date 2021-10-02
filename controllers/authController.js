@@ -40,10 +40,10 @@ exports.login = async (req, res) => {
                 const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
                 res.send({ message: 'Auth Successfully', token: token });
             } else {
-                res.send({ message: 'Wrong email or password1.' });
+                res.status(400).send({ message: 'Wrong email or password.' });
             }
         } else {
-            res.send({ message: "Wrong email or password.2" });
+            res.status(400).send({ message: "Wrong email or password." });
         }
     } catch (error) {
         console.log(error);
@@ -56,11 +56,9 @@ exports.register = async (req, res) => {
     try {
         const userFound = await User.findOne({ email: req.body.email });
         if (userFound) {
-            res.send({ message: 'email already exist, please choose another email' })
+            res.status(400).send({ message: 'email already exist, please choose another email' })
         } else {
-            console.log(req.body.password);
             const hashedPwd = await bcrypt.hash(req.body.password, 10);
-            console.log(hashedPwd);
             const createdUser = await User.create({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
