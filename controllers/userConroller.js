@@ -15,6 +15,7 @@ exports.allUsers = async (req, res) => {
 //add one user
 exports.addUser = async (req, res) => {
     try {
+        //hash password
         const createdUser = await User.create(req.body)
         res.json(createdUser);
     }
@@ -27,6 +28,7 @@ exports.addUser = async (req, res) => {
 //update user by id
 exports.updateUser = async (req, res) => {
     try {
+        //hash password
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
         res.json(updatedUser);
     }
