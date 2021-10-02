@@ -66,7 +66,7 @@ exports.register = async (req, res) => {
                 age: req.body.age,
                 password: hashedPwd,
             });
-            res.json(createdUser);
+            res.json({ message: 'register Successfully' });
         }
     }
     catch (err) {
@@ -74,78 +74,34 @@ exports.register = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-//forgot password controller
-exports.forgotPassword_v2 = async (req, res) => {
-    const { email } = req.body
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ error: "email does not exist" })
-        }
-        const token = jwt.sign({ _Id: user._id, }, process.env.RESET_PASSWORD_KEY, { expiresIn: process.env.JWT_EXPIRE });
-        const data = {
-            to: email,
-            from: 'passwordreset@demo.com',
-            subject: 'Node.js Password Reset',
-            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-                + process.env.CLIENT_URL + '/' + token + '\n\n' +
-                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-        };
-        return user.updateOne({ resetlink: token }, async (err, success) => {
-            if (err) {
-                return res.status(400).json({ error: "reset password link error" })
-            } else {
-                const info = await transporter.sendMail(data, (error, body) => {
-                    if (error) {
-                        return res.json({ error: err.message })
-                    } else
-                        res.json({ message: 'html send' });
-                });
-            }
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Internal Server error Occured");
-    }
-}
+
 //reset password contoller
 exports.resetPassword = async (req, res) => {
     const { resetlink, newPass } = req.body
     try {
         if (resetlink) {
-            jwt.verify(resetlink, process.env.RESET_PASSWORD_KEY, (err, decodedData) => {
+            jwt.verify(resetlink, process.env.RESET_PASSWORD_KEY, async (err, decodedData) => {
                 if (err) {
-                    return res.status(401).json({ error: 'invalid token or it is expired' })
+                    res.status(400).json({ message: 'invalid token or it is expired' })
                 }
-                User.findOne({ resetlink }, (err, user) => {
-                    if (err || !user) {
-                        console.log(err)
+                const user = await User.findOne({ resetlink })
 
-                        return res.status(400).json({ error: "user with this token does not exist" })
-                    }
-                    const obj = {
-                        password: newPass,
-                        resetlink: ''
-                    }
-                    user = _.extend(user, obj);
-                    user.save((err, result) => {
-                        if (err) {
-                            return res.status(400).json({ error: "reset password error" })
-                        }
-                        return res.status(200).json({ message: "your password has been changed" })
-                    })
-                })
+                const hashedPwd = await bcrypt.hash(newPass, 10);
+                user.password = hashedPwd;
+                user.resetlink = '';
+                await user.save();
+                res.status(200).json({ message: "your password has been changed" })
             })
         } else {
-            return res.status(401).json({ error: "Authentication error" });
+            res.status(400).json({ message: "reset link is expired" });
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send("Internal Server error Occured");
+        res.status(500).json({ message: "Internal Server error Occured" });
     }
 }
 
+//forgot password controller
 exports.forgotPassword = async (req, res) => {
     try {
         const { email } = req.body
@@ -164,27 +120,13 @@ exports.forgotPassword = async (req, res) => {
             from: 'AngularGrassi@gmail.com',
             to: email,
             subject: 'subject',
-            html: ejs.render(content, { token,name,email })
+            html: ejs.render(content, { token, name, email })
         };
 
         const info = await transporter.sendMail(mailData);
-        res.send({ message: "html send", message_id: info.messageId });
-        return user.updateOne({ resetlink: token }, async (err, success) => {
-            try {
-                {
-                    const info = await transporter.sendMail(data, (error, body) => {
-                        if (error) {
-                            return res.json({ error: err.message })
-                        } else
-                            res.json({ message: 'html send' });
-                    });
-                }
-            }
-            catch (err) {
-                console.log(err);
-                return res.status(400).json({ error: "reset password link error" })
-            }
-        })
+        user.resetlink = token;
+        await user.save();
+        res.send({ message: "check your Mail", message_id: info.messageId });
     }
     catch (err) {
         console.log(err);
