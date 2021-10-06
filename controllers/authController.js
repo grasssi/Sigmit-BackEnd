@@ -101,8 +101,8 @@ exports.resetPassword = async (req, res) => {
     }
 }
 
-//forgot password controller
-exports.forgotPassword = async (req, res) => {
+//change password controller
+exports.changePassword = async (req, res) => {
     try {
         const { email } = req.body
         const user = await User.findOne({ email });

@@ -9,6 +9,9 @@ router.get('/allusers', userController.allUsers)
 // add one user
 router.post('/adduser', userController.addUser)
 
+//getone user by id
+router.get('/getuser/:id', userController.getUser)
+
 // update user by id
 router.put('/updateuser/:id', userController.updateUser)
 

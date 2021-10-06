@@ -29,7 +29,7 @@ exports.addUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         //hash password
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body)
         res.json(updatedUser);
     }
     catch (err) {
@@ -43,6 +43,19 @@ exports.removeUser = async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id)
         res.json({ message: 'deleted user successfully' });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+//get one user by id
+exports.getUser = async (req, res) => {
+    try {
+        //hash password
+        const getUser = await User.findById(req.params.id)
+        res.json(getUser);
     }
     catch (err) {
         console.log(err);
