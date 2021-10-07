@@ -1,4 +1,5 @@
 const User = require('../models/userShema')
+const bcrypt = require('bcrypt');
 
 // get all users
 exports.allUsers = async (req, res) => {
@@ -29,6 +30,8 @@ exports.addUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         //hash password
+        const hashedPwd = await bcrypt.hash(req.body.password, 10);
+        req.body.password=hashedPwd;
         const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body)
         res.json(updatedUser);
     }

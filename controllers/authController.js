@@ -76,7 +76,7 @@ exports.register = async (req, res) => {
 }
 
 //reset password contoller
-exports.resetPassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
     const { resetlink, newPass } = req.body
     try {
         if (resetlink) {
@@ -102,7 +102,7 @@ exports.resetPassword = async (req, res) => {
 }
 
 //change password controller
-exports.changePassword = async (req, res) => {
+exports.resetPassword = async (req, res) => {
     try {
         const { email } = req.body
         const user = await User.findOne({ email });
