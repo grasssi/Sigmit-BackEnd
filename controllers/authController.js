@@ -40,10 +40,10 @@ exports.login = async (req, res) => {
                 const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
                 res.send({ message: 'Auth Successfully', token: token });
             } else {
-                res.status(400).send({ message: 'Wrong email or password.' });
+                res.status(400).send({ message: 'Wrong email or password1.' });
             }
         } else {
-            res.status(400).send({ message: "Wrong email or password." });
+            res.status(400).send({ message: "Wrong email or password2." });
         }
     } catch (error) {
         console.log(error);
@@ -64,6 +64,7 @@ exports.register = async (req, res) => {
                 lastName: req.body.lastName,
                 email: req.body.email,
                 age: req.body.age,
+                role: req.body.role,
                 password: hashedPwd,
             });
             res.json({ message: 'register Successfully' });

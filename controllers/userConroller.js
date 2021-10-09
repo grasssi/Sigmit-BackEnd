@@ -13,10 +13,11 @@ exports.allUsers = async (req, res) => {
     }
 }
 
-//add one user
+//add one user(not used)
 exports.addUser = async (req, res) => {
     try {
         //hash password
+        console.log('roleeeeeeeeeee',req.body.value.role);
         const createdUser = await User.create(req.body)
         res.json(createdUser);
     }
