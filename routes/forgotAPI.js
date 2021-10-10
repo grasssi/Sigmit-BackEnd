@@ -7,8 +7,8 @@ const authcontoller = require(('../controllers/authController'));
 //reset password
 router.put('/resetpassword', authcontoller.resetPassword)
 
-//forgot password
-router.post('/forgotpassword',authcontoller.forgotPassword)
+//forgot password(change)
+router.post('/changepassword',authcontoller.changePassword)
 
 
 

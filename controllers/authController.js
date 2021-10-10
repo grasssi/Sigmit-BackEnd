@@ -40,10 +40,10 @@ exports.login = async (req, res) => {
                 const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
                 res.send({ message: 'Auth Successfully', token: token });
             } else {
-                res.status(400).send({ message: 'Wrong email or password.' });
+                res.status(400).send({ message: 'Wrong email or password1.' });
             }
         } else {
-            res.status(400).send({ message: "Wrong email or password." });
+            res.status(400).send({ message: "Wrong email or password2." });
         }
     } catch (error) {
         console.log(error);
@@ -64,6 +64,7 @@ exports.register = async (req, res) => {
                 lastName: req.body.lastName,
                 email: req.body.email,
                 age: req.body.age,
+                role: req.body.role,
                 password: hashedPwd,
             });
             res.json({ message: 'register Successfully' });
@@ -76,7 +77,7 @@ exports.register = async (req, res) => {
 }
 
 //reset password contoller
-exports.resetPassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
     const { resetlink, newPass } = req.body
     try {
         if (resetlink) {
@@ -101,8 +102,8 @@ exports.resetPassword = async (req, res) => {
     }
 }
 
-//forgot password controller
-exports.forgotPassword = async (req, res) => {
+//change password controller
+exports.resetPassword = async (req, res) => {
     try {
         const { email } = req.body
         const user = await User.findOne({ email });

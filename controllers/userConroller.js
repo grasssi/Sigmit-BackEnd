@@ -1,4 +1,5 @@
 const User = require('../models/userShema')
+const bcrypt = require('bcrypt');
 
 // get all users
 exports.allUsers = async (req, res) => {
@@ -12,10 +13,11 @@ exports.allUsers = async (req, res) => {
     }
 }
 
-//add one user
+//add one user(not used)
 exports.addUser = async (req, res) => {
     try {
         //hash password
+        console.log('roleeeeeeeeeee',req.body.value.role);
         const createdUser = await User.create(req.body)
         res.json(createdUser);
     }
@@ -29,7 +31,9 @@ exports.addUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         //hash password
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        const hashedPwd = await bcrypt.hash(req.body.password, 10);
+        req.body.password=hashedPwd;
+        const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body)
         res.json(updatedUser);
     }
     catch (err) {
@@ -43,6 +47,19 @@ exports.removeUser = async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id)
         res.json({ message: 'deleted user successfully' });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+//get one user by id
+exports.getUser = async (req, res) => {
+    try {
+        //hash password
+        const getUser = await User.findById(req.params.id)
+        res.json(getUser);
     }
     catch (err) {
         console.log(err);
