@@ -71,3 +71,15 @@ exports.affectOwner = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+//desaffect owner from service
+exports.desaffectOwner = async (req, res) => {
+    try {
+       const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$pull : {owners : req.params.idOwner}}, { new: true })
+       res.json(updatedService);
+   }
+   catch (err) {
+       console.log(err);
+       res.status(500).json({ message: 'Internal server error' });
+   }
+}

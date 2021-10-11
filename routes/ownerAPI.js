@@ -15,4 +15,7 @@ router.put('/updateowner/:id', Ownercontroller.updateOwner)
 // delete user by id
 router.delete('/removeowner/:id', Ownercontroller.removeOwner)
 
+//get one owner by id
+router.get('/getowner/:id', Ownercontroller.getOwner)
+
 module.exports = router;

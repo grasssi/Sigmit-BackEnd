@@ -19,7 +19,10 @@ router.put('/updateservice/:id', serviceContoller.updateService)
 router.get('/getservice/:id', serviceContoller.getService)
 
 //affect owner to service
-router.put('/service/affect/:idService/:idOwner',serviceContoller.affectOwner)
+router.put('/affectService/:idService/:idOwner',serviceContoller.affectOwner)
+
+//desaffect owner to service
+router.put('/desaffectService/:idService/:idOwner',serviceContoller.desaffectOwner)
 
 
 module.exports = router;
