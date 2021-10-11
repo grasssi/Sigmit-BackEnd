@@ -16,7 +16,9 @@ exports.allOwners = async (req, res) => {
 exports.addOwner = async (req, res) => {
     try {
         const createdOwner = await Owner.create(req.body)
-        res.json(createdOwner);
+        console.log('idd=', req.body._id);
+                // const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
+            res.json(createdOwner);
     }
     catch (err) {
         console.log(err);
@@ -41,6 +43,18 @@ exports.removeOwner = async (req, res) => {
     try {
         const deletedOwner = await Owner.findByIdAndDelete(req.params.id)
         res.json({ message: 'deleted the owner successfully' });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+//get one owner by id
+exports.getOwner = async (req, res) => {
+    try {
+        //hash password
+        const getOwner = await Owner.findById(req.params.id)
+        res.json(getOwner);
     }
     catch (err) {
         console.log(err);
