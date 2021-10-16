@@ -17,7 +17,7 @@ exports.addOwner = async (req, res) => {
     try {
         const createdOwner = await Owner.create(req.body)
         console.log('idd=', req.body._id);
-                // const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
+                 const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
             res.json(createdOwner);
     }
     catch (err) {

@@ -62,8 +62,8 @@ exports.getService = async (req, res) => {
 
 //affect owner to service
 exports.affectOwner = async (req, res) => {
-     try {
-        const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
+    try {
+        const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.body.owner}}, { new: true })
         res.json(updatedService);
     }
     catch (err) {
