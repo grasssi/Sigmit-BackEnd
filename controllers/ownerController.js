@@ -1,5 +1,5 @@
 const Owner = require('../models/ownerSchema')
-
+const Service=require('../models/serviceSchema')
 // get all owners
 exports.allOwners = async (req, res) => {
     try {
@@ -16,9 +16,9 @@ exports.allOwners = async (req, res) => {
 exports.addOwner = async (req, res) => {
     try {
         const createdOwner = await Owner.create(req.body)
-        console.log('idd=', req.body._id);
-                // const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
-            res.json(createdOwner);
+        console.log('owners=',req.body.service);
+        const updatedService = await Service.findByIdAndUpdate(req.body.service, { $push: { owners: req.params.idOwner } }, { new: true })
+        res.json(createdOwner);
     }
     catch (err) {
         console.log(err);

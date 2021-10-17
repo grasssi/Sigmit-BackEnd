@@ -1,4 +1,5 @@
 const Service = require('../models/serviceSchema')
+const Owner = require('../models/ownerSchema')
 
 //add Service Controller
 exports.addService = async (req, res) => {
@@ -62,9 +63,15 @@ exports.getService = async (req, res) => {
 
 //affect owner to service
 exports.affectOwner = async (req, res) => {
-     try {
-        const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$push : {owners : req.params.idOwner}}, { new: true })
+    try {
+        const updatedService = await Service.findByIdAndUpdate(req.params.idService, { $push: { owners: req.body.owner } }, { new: true })
+        //affect the service to the selected owners
+        for (let i = 0; i < (req.body.owner).length; i++) {
+            console.log('ownerrrr',req.body.owner);
+            const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: req.params.idService } }, { new: true })
+        }
         res.json(updatedService);
+
     }
     catch (err) {
         console.log(err);
@@ -75,11 +82,11 @@ exports.affectOwner = async (req, res) => {
 //desaffect owner from service
 exports.desaffectOwner = async (req, res) => {
     try {
-       const updatedService = await Service.findByIdAndUpdate(req.params.idService, {$pull : {owners : req.params.idOwner}}, { new: true })
-       res.json(updatedService);
-   }
-   catch (err) {
-       console.log(err);
-       res.status(500).json({ message: 'Internal server error' });
-   }
+        const updatedService = await Service.findByIdAndUpdate(req.params.idService, { $pull: { owners: req.params.idOwner } }, { new: true })
+        res.json(updatedService);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
