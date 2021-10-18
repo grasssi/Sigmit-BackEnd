@@ -5,7 +5,11 @@ const Owner = require('../models/ownerSchema')
 exports.addService = async (req, res) => {
     try {
         const createdService = await Service.create(req.body)
-        res.json(createdService);
+        const updatedService = await Service.findByIdAndUpdate(createdService._id, { $push: { owners: req.body.owner } }, { new: true })
+            console.log('ownerrrr',(req.body.owner).length);
+             for (let i = 0; i < (req.body.owner).length; i++) {
+            const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: createdService._id } }, { new: true })
+             }
     }
     catch (err) {
         console.log(err);
@@ -66,7 +70,7 @@ exports.affectOwner = async (req, res) => {
     try {
         const updatedService = await Service.findByIdAndUpdate(req.params.idService, { $push: { owners: req.body.owner } }, { new: true })
         //affect the service to the selected owners
-        for (let i = 0; i < (req.body.owner).length; i++) {
+        for (const i = 0; i < (req.body.owner).length; i++) {
             console.log('ownerrrr',req.body.owner);
             const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: req.params.idService } }, { new: true })
         }
