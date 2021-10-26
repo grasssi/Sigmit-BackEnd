@@ -7,7 +7,8 @@ exports.addService = async (req, res) => {
         const createdService = await Service.create(req.body)
         const updatedService = await Service.findByIdAndUpdate(createdService._id, { $push: { owners: req.body.owner } }, { new: true })
             console.log('ownerrrr',(req.body.owner).length);
-             for (let i = 0; i < (req.body.owner).length; i++) {
+           //affect service to the owners
+            for (let i = 0; i < (req.body.owner).length; i++) {
             const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: createdService._id } }, { new: true })
              }
     }

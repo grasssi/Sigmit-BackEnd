@@ -48,6 +48,7 @@ const forgotApi = require('./routes/forgotAPI');
 const ownerApi = require('./routes/ownerAPI');
 const serviceApi = require('./routes/serviceAPI');
 const typeApi = require('./routes/typeAPI');
+const marqueApi = require('./routes/marqueAPI');
 
 
 app.use('/api/v1', userApi);
@@ -58,6 +59,7 @@ app.use('/api/v1', forgotApi);
 app.use('/api/v1', ownerApi);
 app.use('/api/v1', serviceApi);
 app.use('/api/v1', typeApi);
+app.use('/api/v1', marqueApi);
 
 
 app.listen(port, () => {
