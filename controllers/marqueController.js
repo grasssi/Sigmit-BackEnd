@@ -59,3 +59,21 @@ exports.getMarque = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+//affect types to marque
+exports.affectTypes = async (req, res) => {
+    try {
+        console.log(req.params);
+        const updatedType = await Marque.findByIdAndUpdate(req.params.idMarque, { $push: { types: req.params.idType } }, { new: true })
+        //affect the marque to the selected types
+        // for (const i = 0; i < (req.body.owner).length; i++) {
+        //     console.log('ownerrrr',req.body.owner);
+        //     const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: req.params.idService } }, { new: true })
+        // }
+        res.json(updatedType);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
