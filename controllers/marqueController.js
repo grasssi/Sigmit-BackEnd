@@ -77,3 +77,14 @@ exports.affectTypes = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+exports.findMarques   = async (req, res) => {
+    try {
+        const marques = await Marque.find({"types": req.body.types});
+        res.json(marques);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
