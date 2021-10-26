@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const typeSchema = new Schema({
     type: { type: String, required: true,unique:true },
+    marques:[{type:Schema.Types.ObjectId,ref:'marques'}]
 }, {
     versionKey: false,
     timestamps: true

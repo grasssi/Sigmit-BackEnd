@@ -17,5 +17,10 @@ router.put('/updatemarque/:id', marqueController.updateMarque)
 
 // delete user by id
 router.delete('/removemarque/:id', marqueController.removeMarque)
+ 
+//affec types to marque
+router.put('/affecttypes/:idType/:idMarque', marqueController.affectTypes)
+
+router.get('/findmarques', marqueController.findMarques)
 
 module.exports = router;
