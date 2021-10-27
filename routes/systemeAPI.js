@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-// reuire controller
+// require controller
 const systemeContoller = require(('../controllers/systemeController'));
 
-// add one service
+// add one systeme
 router.post('/addsysteme', systemeContoller.addSysteme)
 
-// Remove one service
+// Remove one systeme
 router.delete('/removesysteme/:id', systemeContoller.removeSysteme)
 
-//get all services
+//get all systemes
 router.get('/allsysteme', systemeContoller.allSysteme)
 
-// update service by id
+// update systeme by id
 router.put('/updatesysteme/:id', systemeContoller.updateSysteme)
 
-//get service by id
+//get systeme by id
 router.get('/getsysteme/:id', systemeContoller.getSysteme)
 
 // //affect owner to service
