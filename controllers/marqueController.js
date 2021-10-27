@@ -63,7 +63,6 @@ exports.getMarque = async (req, res) => {
 //affect types to marque
 exports.affectTypes = async (req, res) => {
     try {
-        console.log(req.params);
         const updatedType = await Marque.findByIdAndUpdate(req.params.idMarque, { $push: { types: req.params.idType } }, { new: true })
         //affect the marque to the selected types
         // for (const i = 0; i < (req.body.owner).length; i++) {
@@ -80,7 +79,8 @@ exports.affectTypes = async (req, res) => {
 
 exports.findMarques   = async (req, res) => {
     try {
-        const marques = await Marque.find({"types": req.body.types});
+
+        const marques = await Marque.find({"types": req.params.id});
         res.json(marques);
     }
     catch (err) {

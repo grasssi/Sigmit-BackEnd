@@ -21,6 +21,6 @@ router.delete('/removemarque/:id', marqueController.removeMarque)
 //affec types to marque
 router.put('/affecttypes/:idType/:idMarque', marqueController.affectTypes)
 
-router.get('/findmarques', marqueController.findMarques)
+router.get('/findmarques/:id', marqueController.findMarques)
 
 module.exports = router;
