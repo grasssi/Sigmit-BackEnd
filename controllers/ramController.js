@@ -1,6 +1,6 @@
 const Ram = require('../models/ramSchema')
 
-//add Type Controller
+//add Ram Controller
 exports.addRam = async (req, res) => {
     try {
         const createdRam = await Ram.create(req.body)
@@ -12,7 +12,7 @@ exports.addRam = async (req, res) => {
     }
 }
 
-//remove by Id Type Contoller
+//remove by Id Ram Contoller
 exports.removeRam = async (req, res) => {
     try {
         const deleteRam = await Ram.findByIdAndDelete(req.params.id)
@@ -24,7 +24,7 @@ exports.removeRam = async (req, res) => {
     }
 }
 
-// get all Types 
+// get all Ram 
 exports.allRam = async (req, res) => {
     try {
         const Types = await Ram.find({}).populate();
@@ -36,7 +36,7 @@ exports.allRam = async (req, res) => {
     }
 }
 
-//update base by id controller
+//update Ram by id controller
 exports.updateRam = async (req, res) => {
     try {
         const updatedRam = await Ram.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -48,7 +48,7 @@ exports.updateRam = async (req, res) => {
     }
 }
 
-//Get base By id contoller
+//Get Ram By id contoller
 exports.getRam = async (req, res) => {
     try {
         const getRam = await Ram.findById(req.params.id)

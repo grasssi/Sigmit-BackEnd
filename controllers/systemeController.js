@@ -1,6 +1,6 @@
 const Systeme = require('../models/systemeSchema')
 
-//add Type Controller
+//add Systeme Controller
 exports.addSysteme = async (req, res) => {
     try {
         const createdSysteme = await Systeme.create(req.body)
@@ -12,7 +12,7 @@ exports.addSysteme = async (req, res) => {
     }
 }
 
-//remove by Id Type Contoller
+//remove by Id Systeme Contoller
 exports.removeSysteme = async (req, res) => {
     try {
         const deleteSysteme = await Systeme.findByIdAndDelete(req.params.id)
@@ -24,11 +24,11 @@ exports.removeSysteme = async (req, res) => {
     }
 }
 
-// get all Types 
+// get all Systeme 
 exports.allSysteme = async (req, res) => {
     try {
-        const Types = await Systeme.find({}).populate();
-        res.json(Types);
+        const Systemes = await Systeme.find({}).populate();
+        res.json(Systemes);
     }
     catch (err) {
         console.log(err);
@@ -36,7 +36,7 @@ exports.allSysteme = async (req, res) => {
     }
 }
 
-//update base by id controller
+//update Systeme by id controller
 exports.updateSysteme = async (req, res) => {
     try {
         const updatedSysteme = await Systeme.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -48,11 +48,11 @@ exports.updateSysteme = async (req, res) => {
     }
 }
 
-//Get base By id contoller
+//Get Systeme By id contoller
 exports.getSysteme = async (req, res) => {
     try {
-        const Systeme = await Systeme.findById(req.params.id)
-        res.json(Systeme);
+        const getSysteme = await Systeme.findById(req.params.id)
+        res.json(getSysteme);
     }
     catch (err) {
         console.log(err);
