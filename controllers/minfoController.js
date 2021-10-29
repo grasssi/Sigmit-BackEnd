@@ -37,11 +37,17 @@ exports.removeMinfo = async (req, res) => {
 // get all Materiels 
 exports.allMinfos = async (req, res) => {
     try {
-        const minfo = await Minfo.find({}).populate('type');
+        const minfo = await Minfo.find({})
+            .populate('type', { type: 1 } )
+            .populate('Marque')
+            .populate('service')
+            .populate('ram')
+            .populate('owner')
+            .populate('systeme')
+            .populate('application')
         console.log((minfo).length);
-        for (const i = 0; i < (minfo).length; i++) {
-         
-        console.log(minfo[i].type.type);
+        for (let i = 0; i < (minfo).length; i++) {
+            console.log(minfo[i].type.type);
         }
         res.json(minfo);
     }
