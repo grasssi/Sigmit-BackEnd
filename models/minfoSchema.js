@@ -3,16 +3,16 @@ const uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 
 const minfoSchema = new Schema({
-    type: { type: String, required: true },
-    Marque: { type: String },
-    service: { type: String, required: true},
-    SerialNumber: { type: String, required: true } ,               
-    owner: { type: String, required: true },
-    ram: { type: String, required: true },
-    systeme: { type: String, required: true },
-    domaine: { type: String, required: true},
-    application: { type: String, required: true },
-    situation: { type: String, required: true }  
+    type: { type: Schema.Types.ObjectId, ref: 'type' },
+    Marque: { type: Schema.Types.ObjectId, ref: 'marques' },
+    service: { type: Schema.Types.ObjectId, ref: 'service' },
+    owner: { type: Schema.Types.ObjectId, ref: 'owners' },
+    ram: { type: Schema.Types.ObjectId, ref: 'ram' },
+    systeme: { type: Schema.Types.ObjectId, ref: 'systeme' },
+    application: { type: Schema.Types.ObjectId, ref: 'application' },
+    domaine: { type: String },
+    SerialNumber: { type: String },
+    situation: { type: String }
 }, {
     versionKey: false,
     timestamps: true
