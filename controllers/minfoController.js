@@ -3,8 +3,18 @@ const Minfo = require('../models/minfoSchema')
 //add one materiel Contoller
 exports.addMinfo = async (req, res) => {
     try {
-        const createdMateriel = await Minfo.create(req.body)
-        res.json(createdMateriel);
+        const createdMinfo = await Minfo.create(req.body)
+        await Minfo.findByIdAndUpdate(createdMinfo._id, {
+            $push: [{
+                type: req.body.type,
+                Marque: req.body.Marque,
+                owner: req.body.owner,
+                ram: req.body.ram,
+                systeme: req.body.systeme,
+                application: req.body.application
+            }],
+        }, { new: true })
+        res.json(createdMinfo);
     }
     catch (err) {
         console.log(err);
@@ -27,7 +37,12 @@ exports.removeMinfo = async (req, res) => {
 // get all Materiels 
 exports.allMinfos = async (req, res) => {
     try {
-        const minfo = await Minfo.find({}).populate();
+        const minfo = await Minfo.find({}).populate('type');
+        console.log((minfo).length);
+        for (const i = 0; i < (minfo).length; i++) {
+         
+        console.log(minfo[i].type.type);
+        }
         res.json(minfo);
     }
     catch (err) {
