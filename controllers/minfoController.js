@@ -3,9 +3,11 @@ const Minfo = require('../models/minfoSchema')
 //add one materiel Contoller
 exports.addMinfo = async (req, res) => {
     try {
+        console.log('grassiiii=', req.body.type);
         const createdMinfo = await Minfo.create(req.body)
+
         await Minfo.findByIdAndUpdate(createdMinfo._id, {
-            $push: [{
+            $addToSet : [{
                 type: req.body.type,
                 Marque: req.body.Marque,
                 owner: req.body.owner,
@@ -21,7 +23,64 @@ exports.addMinfo = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+exports.addMinfoV2 = async (req, res) => {
+    try {
+        const createdMinfo = await Minfo.create(req.body)
+        if (mongoose.Types.ObjectId.isValid(req.body.type)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    type: req.body.type,
+                }],
+            }, { new: true })
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.Marque)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    Marque: req.body.Marque,
 
+                }],
+            }, { new: true })
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.owner)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    owner: req.body.owner,
+
+                }],
+            }, { new: true })
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.ram)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    ram: req.body.ram,
+
+                }],
+            }, { new: true })
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.systeme)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    systeme: req.body.systeme,
+
+                }],
+            }, { new: true })
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.application)) {
+            await Minfo.findByIdAndUpdate(createdMinfo._id, {
+                $push: [{
+                    application: req.body.application,
+
+                }],
+            }, { new: true })
+        }
+        res.json(createdMinfo);
+    }
+
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 //remove by Id materiel Contoller
 exports.removeMinfo = async (req, res) => {
     try {
@@ -38,17 +97,13 @@ exports.removeMinfo = async (req, res) => {
 exports.allMinfos = async (req, res) => {
     try {
         const minfo = await Minfo.find({})
-            .populate('type', { type: 1 } )
+            .populate('type', { type: 1 })
             .populate('Marque')
             .populate('service')
             .populate('ram')
             .populate('owner')
             .populate('systeme')
             .populate('application')
-        console.log((minfo).length);
-        for (let i = 0; i < (minfo).length; i++) {
-            console.log(minfo[i].type.type);
-        }
         res.json(minfo);
     }
     catch (err) {

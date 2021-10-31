@@ -1,9 +1,21 @@
 const Owner = require('../models/ownerSchema')
 const Service=require('../models/serviceSchema')
+
 // get all owners
 exports.allOwners = async (req, res) => {
     try {
         const owners = await Owner.find({});
+        res.json(owners);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+//all owners without service
+exports.allOwnersWs = async (req, res) => {
+    try {
+        const owners = await Owner.find({service : null});
         res.json(owners);
     }
     catch (err) {
