@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 // reuire Controller
 const MinfoController = require('../controllers/minfoController')
 
