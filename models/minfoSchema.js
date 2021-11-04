@@ -17,7 +17,7 @@ const minfoSchema = new Schema({
     versionKey: false,
     timestamps: true
 });
-minfoSchema.plugin(uniqueValidator)
+// minfoSchema.plugin(uniqueValidator)
 const Minfo = mongoose.model('minfo', minfoSchema);
 
 module.exports = Minfo;
