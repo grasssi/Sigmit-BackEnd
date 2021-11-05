@@ -71,9 +71,9 @@ exports.addMinfoV2 = async (req, res) => {
         if (mongoose.Types.ObjectId.isValid(req.body.service) == false) {
             delete req.body.service
         }
-        if (mongoose.Types.ObjectId.isValid(req.body.SerialNumber) == false) {
-            delete req.body.SerialNumber
-        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.SerialNumber) == false) {
+        //     delete req.body.SerialNumber
+        // }
         if (mongoose.Types.ObjectId.isValid(req.body.owner) == false) {
             delete req.body.owner
         }
@@ -89,9 +89,9 @@ exports.addMinfoV2 = async (req, res) => {
         if (mongoose.Types.ObjectId.isValid(req.body.application) == false) {
             delete req.body.application
         }
-        if (mongoose.Types.ObjectId.isValid(req.body.situation) == false) {
-            delete req.body.situation
-        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.situation) == false) {
+        //     delete req.body.situation
+        // }
         console.log(req.body);
         const createdMinfo = await Minfo.create(req.body)
 

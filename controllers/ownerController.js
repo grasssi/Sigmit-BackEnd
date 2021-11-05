@@ -4,7 +4,7 @@ const Service=require('../models/serviceSchema')
 // get all owners
 exports.allOwners = async (req, res) => {
     try {
-        const owners = await Owner.find({});
+        const owners = await Owner.find({}).populate('service');
         res.json(owners);
     }
     catch (err) {

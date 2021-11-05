@@ -5,7 +5,7 @@ const router = express.Router();
 const MinfoController = require('../controllers/minfoController')
 
 // add one Materiel
-router.post('/addminfo', MinfoController.addMinfo)
+router.post('/addminfo', MinfoController.addMinfoV2)
 
 // Remove one materiel
 router.delete('/removeminfo/:id', MinfoController.removeMinfo)

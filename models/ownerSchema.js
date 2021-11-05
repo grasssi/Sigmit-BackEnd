@@ -6,7 +6,6 @@ const Schema = mongoose.Schema;
 const ownerSchema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: false },
-    email: { type: String, required: true, unique: true },
     service: { type: Schema.Types.ObjectId,ref:'service' }
 }, {
     versionKey: false,
