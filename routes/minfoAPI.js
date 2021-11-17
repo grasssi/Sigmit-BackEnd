@@ -18,4 +18,12 @@ router.put('/updateminfo/:id', MinfoController.updateMinfo)
 
 //get materiel by id
 router.get('/getminfo/:id', MinfoController.getMinfo)
+
+//countDocuments 
+router.get('/allcountminfos', MinfoController.allcountMinfos)
+
+//getallApplications
+router.get('/allapplication', MinfoController.allappMinfos)
+
+
 module.exports = router;

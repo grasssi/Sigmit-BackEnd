@@ -123,7 +123,6 @@ exports.removeMinfo = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-
 // get all Materiels 
 exports.allMinfos = async (req, res) => {
     try {
@@ -135,6 +134,7 @@ exports.allMinfos = async (req, res) => {
             .populate('owner')
             .populate('systeme')
             .populate('application')
+
         res.json(minfo);
     }
     catch (err) {
@@ -154,11 +154,63 @@ exports.updateMinfo = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-
 //Get materiel By id contoller
 exports.getMinfo = async (req, res) => {
     try {
         const minfo = await Minfo.findById(req.params.id)
+        res.json(minfo);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+exports.allcountMinfos = async (req, res) => {
+    try {
+        //  const minfo  = await Minfo.find({})
+        // minfo.count((err, count) => {
+        //         if (err)
+        //             console.log(err)
+        //         else
+        //             console.log("Count:", count)
+        //     });
+        // .populate('type', { type: 1 })
+        // .populate('Marque')
+        // .populate('service')
+        // .populate('ram')
+        // .populate('owner')
+        // .populate('systeme')
+        // .populate('application')
+        // const counta =await Minfo.countDocuments({type: "617851db5ff14e633aeff1e0"})
+        const counta = await Minfo.aggregate(
+            [
+                { $match: {} },
+                {
+                    $group: {
+                        _id: "$type",
+                        count: { $sum: 1 },
+                    }
+                }
+
+            ]
+        )
+        // const counta = Minfo.distinct(minfo[1].type)
+
+        // console.log('grasss=', counta);
+
+        res.json(counta);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+//Get application By id contoller
+exports.allappMinfos = async (req, res) => {
+    try {
+        const minfo = await Minfo.find({ domaine: 'منظومة' })
+            .populate('service')
+            .populate('application')
         res.json(minfo);
     }
     catch (err) {
