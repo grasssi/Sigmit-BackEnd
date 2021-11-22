@@ -200,21 +200,24 @@ exports.allcountMinfos = async (req, res) => {
         const countglobal = Object.keys(global).length;
         //console.log(global[countglobal-1]["type"]);
 
-        j = 0;
+        i = 0;
         verif = true
-        for (let i = 0; i < countKey; i++) {
+        suma=0;
+        while ( i < countKey && verif == true) {
             for (let k = 0; k < Object.keys(global).length; k++) {
                 console.log('global',global[k]["type"].toString());
-                console.log('count',(count[i+k]._id.type).toString());
-                if (global[k]["type"].toString() == (count[i+k]._id.type).toString()) {
-                    
+                console.log('count',(count[i]._id.type).toString());
+                if (global[k]["type"].toString() == (count[i]._id.type).toString()) {
                     verif = false;
+                    suma++
+                    global.splice(global[k]["type"].toString(),1,{ "type": global[k]["type"].toString(), "sum":suma, "stock": 0, "opérationnel": 0, "réparation": 0 });
+
+                    i++
                 }
             }
             if (verif == true) {
                 global.push({ type: count[i]._id.type });
-                //  global[countglobal1-1]["type"] = count[i]._id.type
-               // console.log(global);
+                           i++
             }
         }
         res.json(global);
