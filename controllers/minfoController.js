@@ -203,10 +203,10 @@ exports.allcountMinfos = async (req, res) => {
         j = 0;
         verif = true
         for (let i = 0; i < countKey; i++) {
-            for (let k = 0; k < countKey; k++) {
-                console.log('global',global[k]["type"]);
+            for (let k = 0; k < Object.keys(global).length; k++) {
+                console.log('global',global[k]["type"].toString());
                 console.log('count',(count[i+k]._id.type).toString());
-                if (global[k]["type"] == (count[i+k]._id.type).toString()) {
+                if (global[k]["type"].toString() == (count[i+k]._id.type).toString()) {
                     
                     verif = false;
                 }
