@@ -167,38 +167,60 @@ exports.getMinfo = async (req, res) => {
 }
 exports.allcountMinfos = async (req, res) => {
     try {
-        //  const minfo  = await Minfo.find({})
-        // minfo.count((err, count) => {
-        //         if (err)
-        //             console.log(err)
-        //         else
-        //             console.log("Count:", count)
-        //     });
-        // .populate('type', { type: 1 })
-        // .populate('Marque')
-        // .populate('service')
-        // .populate('ram')
-        // .populate('owner')
-        // .populate('systeme')
-        // .populate('application')
-        // const counta =await Minfo.countDocuments({type: "617851db5ff14e633aeff1e0"})
-        const counta = await Minfo.aggregate(
+        const count = await Minfo.aggregate(
             [
                 { $match: {} },
+
                 {
                     $group: {
-                        _id: "$type",
-                        count: { $sum: 1 },
+                        _id: {
+                            "type": "$type",
+                            "situation": "$situation",
+                        },
+                        count: { $count: {} },
+
                     }
-                }
+                },
+                // {
+                //     $lookup:
+                //     {
+                //         from: "type",
+                //         localField: "type._id",
+                //         foreignField: "_id",
+                //         as: "type"
+                //     }
+                // },
+                //  { "$unwind": "$type" },
 
-            ]
+            ],
+
         )
-        // const counta = Minfo.distinct(minfo[1].type)
+        const global = [{ "type": "qq", "sum": 0, "stock": 0, "opérationnel": 0, "réparation": 0 }]
+        const countKey = Object.keys(count).length;
+        const countglobal = Object.keys(global).length;
+        //console.log(global[countglobal-1]["type"]);
 
-        // console.log('grasss=', counta);
+        i = 0;
+        verif = true
+        suma=0;
+        while ( i < countKey && verif == true) {
+            for (let k = 0; k < Object.keys(global).length; k++) {
+                console.log('global',global[k]["type"].toString());
+                console.log('count',(count[i]._id.type).toString());
+                if (global[k]["type"].toString() == (count[i]._id.type).toString()) {
+                    verif = false;
+                    suma++
+                    global.splice(global[k]["type"].toString(),1,{ "type": global[k]["type"].toString(), "sum":suma, "stock": 0, "opérationnel": 0, "réparation": 0 });
 
-        res.json(counta);
+                    i++
+                }
+            }
+            if (verif == true) {
+                global.push({ type: count[i]._id.type });
+                           i++
+            }
+        }
+        res.json(global);
     }
     catch (err) {
         console.log(err);
