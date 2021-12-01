@@ -169,58 +169,44 @@ exports.allcountMinfos = async (req, res) => {
     try {
         const count = await Minfo.aggregate(
             [
-                { $match: {} },
-
-                {
-                    $group: {
-                        _id: {
-                            "type": "$type",
-                            "situation": "$situation",
-                        },
-                        count: { $count: {} },
-
-                    }
-                },
-                // {
-                //     $lookup:
-                //     {
-                //         from: "type",
-                //         localField: "type._id",
-                //         foreignField: "_id",
-                //         as: "type"
-                //     }
-                // },
-                //  { "$unwind": "$type" },
-
-            ],
-
-        )
-        const global = [{ "type": "qq", "sum": 0, "stock": 0, "opérationnel": 0, "réparation": 0 }]
-        const countKey = Object.keys(count).length;
-        const countglobal = Object.keys(global).length;
-        //console.log(global[countglobal-1]["type"]);
-
-        i = 0;
-        verif = true
-        suma=0;
-        while ( i < countKey && verif == true) {
-            for (let k = 0; k < Object.keys(global).length; k++) {
-                console.log('global',global[k]["type"].toString());
-                console.log('count',(count[i]._id.type).toString());
-                if (global[k]["type"].toString() == (count[i]._id.type).toString()) {
-                    verif = false;
-                    suma++
-                    global.splice(global[k]["type"].toString(),1,{ "type": global[k]["type"].toString(), "sum":suma, "stock": 0, "opérationnel": 0, "réparation": 0 });
-
-                    i++
-                }
-            }
-            if (verif == true) {
-                global.push({ type: count[i]._id.type });
-                           i++
-            }
-        }
-        res.json(global);
+                { $group: { _id: { r: "$situation", b: "$type" }, cnt: { $sum: 1 } } },
+                { $project: { a: [{ k: "$_id.r", v: "$cnt" }], type: "$_id.b", _id: 0 } },
+                { $project: { d: { $arrayToObject: "$a" }, type: 1 } },
+                { $group: { _id: "$type", situation: { $push: "$d" } } },
+                { $project: { _id: 0, type: "$_id", "options": { $mergeObjects: "$situation" } } },
+                { $replaceRoot: { newRoot: { $mergeObjects: ["$$ROOT", "$options"] } } },
+                { $project: { options: 0 } }
+            ])
+        // const global = [{ "type": "qq", "sum": 0, "stock": 0, "opérationnel": 0, "réparation": 0 }]
+        // const countKey = Object.keys(count).length;
+        // const countglobal = Object.keys(global).length;
+        // console.log('countKey', countKey);
+        // i = 0;
+        // suma = 0;
+        // while (i < countKey) {
+        //     verif = true
+        //     for (let k = 0; k < Object.keys(global).length; k++) {
+        //         if (global[k]["type"].toString() == (count[i]._id.type).toString()) {
+        //             verif = false;
+        //             console.log('count[i=', i, ']._id.type', count[i]._id.situation);
+        //             console.log('global[k=', k, ']', global[k]["type"].toString());
+        //             console.log('sum', global[k]["sum"]);
+        //             global.splice(global["type"], 1, { "type": count[i]._id.type, "sum": (global[k]["sum"])++ });
+        //             if (count[i]._id.situation == "مخزون") {
+        //                 global.splice(global["type"], 1, { "type": count[i]._id.type, "sum": (global[k]["sum"])++, "stock": count[i].count });
+        //             } else if (count[i]._id.situation == "عملياتي") {
+        //                 global.splice(global["type"], 1, { "type": count[i]._id.type, "sum": (global[k]["sum"])++, "opérationnel": count[i].count });
+        //             } else if (count[i]._id.situation == "تصليح") {
+        //                 global.splice(global["type"], 1, { "type": count[i]._id.type, "sum": (global[k]["sum"])++, "réparation": count[i].count });
+        //             }
+        //         }
+        //     }
+        //     if (verif == true) {
+        //         global.push({ type: count[i]._id.type, sum: 1 });
+        //     }
+        //     i++
+        // }
+        res.json(count);
     }
     catch (err) {
         console.log(err);
