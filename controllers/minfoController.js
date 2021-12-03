@@ -169,58 +169,96 @@ exports.allcountMinfos = async (req, res) => {
     try {
         const count = await Minfo.aggregate(
             [
-                { $match: {} },
-
                 {
                     $group: {
                         _id: {
-                            "type": "$type",
-                            "situation": "$situation",
+                            b: "$type"
                         },
-                        count: { $count: {} },
-
+                        total: {
+                            $sum: 1
+                        },
+                        root: {
+                            $push: "$$ROOT"
+                        }
                     }
                 },
-                // {
-                //     $lookup:
-                //     {
-                //         from: "type",
-                //         localField: "type._id",
-                //         foreignField: "_id",
-                //         as: "type"
-                //     }
-                // },
-                //  { "$unwind": "$type" },
-
-            ],
-
-        )
-        const global = [{ "type": "qq", "sum": 0, "stock": 0, "opérationnel": 0, "réparation": 0 }]
-        const countKey = Object.keys(count).length;
-        const countglobal = Object.keys(global).length;
-        //console.log(global[countglobal-1]["type"]);
-
-        i = 0;
-        verif = true
-        suma=0;
-        while ( i < countKey && verif == true) {
-            for (let k = 0; k < Object.keys(global).length; k++) {
-                console.log('global',global[k]["type"].toString());
-                console.log('count',(count[i]._id.type).toString());
-                if (global[k]["type"].toString() == (count[i]._id.type).toString()) {
-                    verif = false;
-                    suma++
-                    global.splice(global[k]["type"].toString(),1,{ "type": global[k]["type"].toString(), "sum":suma, "stock": 0, "opérationnel": 0, "réparation": 0 });
-
-                    i++
+                {
+                    "$unwind": "$root"
+                },
+                {
+                    $group: {
+                        _id: {
+                            r: "$root.situation",
+                            b: "$root.type"
+                        },
+                        cnt: {
+                            $sum: 1
+                        },
+                        total: {
+                            "$first": "$total"
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        a: [
+                            {
+                                k: "$_id.r",
+                                v: "$cnt"
+                            }
+                        ],
+                        type: "$_id.b",
+                        total: "$total",
+                        _id: 0
+                    }
+                },
+                {
+                    $project: {
+                        d: {
+                            $arrayToObject: "$a"
+                        },
+                        type: 1,
+                        total: 1
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$type",
+                        situation: {
+                            $push: "$d"
+                        },
+                        sum: {
+                            "$first": "$total"
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        type: "$_id",
+                        sum: 1,
+                        "options": {
+                            $mergeObjects: "$situation"
+                        }
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: {
+                            $mergeObjects: [
+                                "$$ROOT",
+                                "$options"
+                            ]
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        options: 0
+                    }
                 }
-            }
-            if (verif == true) {
-                global.push({ type: count[i]._id.type });
-                           i++
-            }
-        }
-        res.json(global);
+            ])
+        res.json(count);
     }
     catch (err) {
         console.log(err);
