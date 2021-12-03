@@ -256,6 +256,21 @@ exports.allcountMinfos = async (req, res) => {
                     $project: {
                         options: 0
                     }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "types",
+                        localField: "type",
+                        foreignField: "_id",
+                        as: "type"
+                    }
+
+                },
+                {
+                    $set: {
+                        type:"$type.type"
+                    }
                 }
             ])
         res.json(count);
