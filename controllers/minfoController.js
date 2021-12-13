@@ -1,4 +1,5 @@
 const Minfo = require('../models/minfoSchema')
+const Res = require('../models/resultatSchema')
 const mongoose = require('mongoose')
 //add one materiel Contoller
 exports.addMinfo = async (req, res) => {
@@ -271,9 +272,13 @@ exports.allcountMinfos = async (req, res) => {
                     $set: {
                         type:"$type.type"
                     }
-                }
+                },
+                {
+                     $out : "resultats"
+                },
             ])
-        res.json(count);
+            const resutl = await Res.find({})
+        res.json(resutl);
     }
     catch (err) {
         console.log(err);
