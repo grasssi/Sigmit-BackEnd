@@ -25,7 +25,8 @@ exports.removeApplication = async (req, res) => {
 }
 
 // get all Application 
-exports.allApplication = async (req, res) => {
+exports.allapp = async (req, res) => {
+    console.log('halloooooooo');
     try {
         const Applications = await Application.find({}).populate();
         res.json(Applications);

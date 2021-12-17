@@ -56,12 +56,14 @@ exports.addMinfo = async (req, res) => {
 }
 exports.addMinfoV2 = async (req, res) => {
     try {
+        console.log(req.body);
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.type));
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.Marque));
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.owner));
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.ram));
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.systeme));
         console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.application));
+        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.domaine));
         // 
         if (mongoose.Types.ObjectId.isValid(req.body.type) == false) {
             delete req.body.type
@@ -84,9 +86,9 @@ exports.addMinfoV2 = async (req, res) => {
         if (mongoose.Types.ObjectId.isValid(req.body.systeme) == false) {
             delete req.body.systeme
         }
-        if (mongoose.Types.ObjectId.isValid(req.body.domaine) == false) {
-            delete req.body.domaine
-        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.domaine) == false) {
+        //     delete req.body.domaine
+        // }
         if (mongoose.Types.ObjectId.isValid(req.body.application) == false) {
             delete req.body.application
         }
@@ -168,116 +170,156 @@ exports.getMinfo = async (req, res) => {
 }
 exports.allcountMinfos = async (req, res) => {
     try {
-        const count = await Minfo.aggregate(
-            [
-                {
-                    $group: {
-                        _id: {
-                            b: "$type"
-                        },
-                        total: {
-                            $sum: 1
-                        },
-                        root: {
-                            $push: "$$ROOT"
-                        }
+        const count = await Minfo.aggregate([
+            {
+                $group: {
+                    _id: {
+                        b: "$type"
+                    },
+
+                    total: {
+                        $sum: 1
+                    },
+                    date: {
+                        $addToSet: "$date"
+                    },
+                    place: {
+                        $addToSet: "$place"
+                    },
+                    root: {
+                        $push: "$$ROOT"
                     }
-                },
-                {
-                    "$unwind": "$root"
-                },
-                {
-                    $group: {
-                        _id: {
-                            r: "$root.situation",
-                            b: "$root.type"
-                        },
-                        cnt: {
-                            $sum: 1
-                        },
-                        total: {
-                            "$first": "$total"
-                        }
-                    }
-                },
-                {
-                    $project: {
-                        a: [
-                            {
-                                k: "$_id.r",
-                                v: "$cnt"
-                            }
-                        ],
-                        type: "$_id.b",
-                        total: "$total",
-                        _id: 0
-                    }
-                },
-                {
-                    $project: {
-                        d: {
-                            $arrayToObject: "$a"
-                        },
-                        type: 1,
-                        total: 1
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$type",
-                        situation: {
-                            $push: "$d"
-                        },
-                        sum: {
-                            "$first": "$total"
-                        }
-                    }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        type: "$_id",
-                        sum: 1,
-                        "options": {
-                            $mergeObjects: "$situation"
-                        }
-                    }
-                },
-                {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                "$$ROOT",
-                                "$options"
-                            ]
-                        }
-                    }
-                },
-                {
-                    $project: {
-                        options: 0
-                    }
-                },
-                {
-                    $lookup:
-                    {
-                        from: "types",
-                        localField: "type",
-                        foreignField: "_id",
-                        as: "type"
+                }
+            },
+            {
+                "$unwind": "$root"
+            },
+            {
+                $group: {
+                    _id: {
+                        r: "$root.situation",
+                        b: "$root.type",
+                        date: "$date",
+                        place: "$place",
+                    },
+                    cnt: {
+                        $sum: 1
+                    },
+                    total: {
+                        "$first": "$total"
                     }
 
-                },
-                {
-                    $set: {
-                        type:"$type.type"
+                }
+            },
+            {
+                $project: {
+                    a: [
+                        {
+                            k: "$_id.r",
+                            v: "$cnt"
+                        }
+                    ],
+                    type: "$_id.b",
+                    total: "$total",
+                    date: "$_id.date",
+                    place: "$_id.place",
+                    _id: 0,
+                }
+            },
+            {
+                $project: {
+                    d: {
+                        $arrayToObject: "$a"
+                    },
+                    date: 1,
+                    place: 1,
+                    type: 1,
+                    total: 1
+                }
+            },
+            {
+                //Here
+                $group: {
+                    _id: "$type",
+
+                    situation: {
+                        $push: "$d"
+                    },
+                    sum: {
+                        "$first": "$total"
+                    },
+                    date: {
+                        "$first": "$date"
+                    },
+                    place: {
+                        "$first": "$place"
+                    },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    type: "$_id",
+                    sum: 1,
+                    "options": {
+                        $mergeObjects: "$situation"
+                    },
+                    date: {
+                        $reduce: {
+                            input: "$date",
+                            initialValue: "",
+                            in: {
+                                $cond: [{ "$eq": ["$$value", ""] }, "$$this", { $concat: ["$$value", " ", "$$this"] }]
+                            }
+                        }
+                    },
+                    place: {
+                        $reduce: {
+                            input: "$place",
+                            initialValue: "",
+                            in: {
+                                $cond: [{ "$eq": ["$$value", ""] }, "$$this", { $concat: ["$$value", " ", "$$this"] }]
+                            }
+                        }
                     }
-                },
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            "$$ROOT",
+                            "$options"
+                        ]
+                    }
+                }
+            },
+            {
+                $project: {
+                    options: 0,
+                }
+            },
+
+            {
+                $lookup:
                 {
-                     $out : "resultats"
-                },
-            ])
-            const resutl = await Res.find({})
+                    from: "types",
+                    localField: "type",
+                    foreignField: "_id",
+                    as: "type"
+                }
+            },
+            {
+                $set: {
+                    type: "$type.type",
+                    comment: "$type.comment",
+                }
+            },
+            {
+                $out: "resultats"
+            },
+        ])
+        const resutl = await Res.find({})
         res.json(resutl);
     }
     catch (err) {
@@ -292,6 +334,115 @@ exports.allappMinfos = async (req, res) => {
             .populate('service')
             .populate('application')
         res.json(minfo);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+//get  all Applications by Services contoller
+exports.allMinfosbyService = async (req, res) => {
+    try {
+        const count = await Minfo.aggregate([
+            {
+                $group: {
+                    _id: {
+                        r: "$domaine",
+                        b: "$service"
+                    },
+                    cnt: {
+                        $sum: 1
+                    }
+                }
+            },
+            {
+                $project: {
+                    a: [
+                        {
+                            // k: "$_id.r",
+                            "k": {
+                                "$ifNull": [
+                                    "$_id.r",
+                                    "replacement-_id.r"
+                                ]
+                            },
+                            v: "$cnt"
+                        }
+                    ],
+                    service: "$_id.b",
+                    _id: 0
+                }
+            },
+            {
+                $project: {
+                    d: {
+                        $arrayToObject: "$a"
+                    },
+                    service: 1
+                }
+            },
+            {
+                $group: {
+                    _id: "$service",
+                    domaine: {
+                        $push: "$d"
+                    }
+                }
+            },
+            {
+                $project: {
+                    sm: {
+                        $size: "$domaine"
+                    },
+                    domaine: 1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    service: "$_id",
+                    "options": {
+                        $mergeObjects: "$domaine"
+                    },
+                    sum: {
+                        $add: [
+                            "$sm",
+                            1
+                        ]
+                    }
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            "$$ROOT",
+                            "$options"
+                        ]
+                    }
+                }
+            },
+            {
+                $project: {
+                    options: 0
+                }
+            },
+            {
+                $lookup:
+                {
+                    from: "services",
+                    localField: "service",
+                    foreignField: "_id",
+                    as: "service"
+                },
+            },
+            {
+                $set: {
+                    service: "$service.nomService",                    
+                }
+            },
+        ])
+        res.json(count);
     }
     catch (err) {
         console.log(err);

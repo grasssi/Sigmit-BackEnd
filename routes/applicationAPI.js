@@ -10,7 +10,7 @@ router.post('/addapplication', applicationContoller.addApplication)
 router.delete('/removeapplication/:id', applicationContoller.removeApplication)
 
 //get all application
-router.get('/allapplication', applicationContoller.allApplication)
+router.get('/allapplications', applicationContoller.allapp)
 
 // update application by id
 router.put('/updateapplication/:id', applicationContoller.updateApplication)
