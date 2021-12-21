@@ -25,5 +25,8 @@ router.get('/allcountminfos', MinfoController.allcountMinfos)
 //getallApplications
 router.get('/allapplication', MinfoController.allappMinfos)
 
+//getallApplicationsbyServices
+router.get('/allminfosbyservice', MinfoController.allMinfosbyService)
+
 
 module.exports = router;
