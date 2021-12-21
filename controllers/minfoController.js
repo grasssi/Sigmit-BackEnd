@@ -261,18 +261,19 @@ exports.allcountMinfos = async (req, res) => {
                     _id: 0,
                     type: "$_id",
                     sum: 1,
+                    date: "$date",
                     "options": {
                         $mergeObjects: "$situation"
                     },
-                    date: {
-                        $reduce: {
-                            input: "$date",
-                            initialValue: "",
-                            in: {
-                                $cond: [{ "$eq": ["$$value", ""] }, "$$this", { $concat: ["$$value", " ", "$$this"] }]
-                            }
-                        }
-                    },
+                    // date: {
+                    //     $reduce: {
+                    //         input: "$date",
+                    //         initialValue: "",
+                    //         in: {
+                    //             $cond: [{ "$eq": ["$$value", ""] }, "$$this", { $concat: ["$$value"," ", "$$this"] }]
+                    //         }
+                    //     }
+                    // },
                     place: {
                         $reduce: {
                             input: "$place",
@@ -438,7 +439,7 @@ exports.allMinfosbyService = async (req, res) => {
             },
             {
                 $set: {
-                    service: "$service.nomService",                    
+                    service: "$service.nomService",
                 }
             },
         ])
