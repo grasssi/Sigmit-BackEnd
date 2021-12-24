@@ -1,4 +1,5 @@
 const Minfo = require('../models/minfoSchema')
+const Consinfo = require('../models/consinfoSchema')
 const Res = require('../models/resultatSchema')
 const mongoose = require('mongoose')
 //add one materiel Contoller
@@ -56,14 +57,6 @@ exports.addMinfo = async (req, res) => {
 }
 exports.addMinfoV2 = async (req, res) => {
     try {
-        console.log(req.body);
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.type));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.Marque));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.owner));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.ram));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.systeme));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.application));
-        console.log('groSssssssssso', mongoose.Types.ObjectId.isValid(req.body.domaine));
         // 
         if (mongoose.Types.ObjectId.isValid(req.body.type) == false) {
             delete req.body.type
@@ -97,7 +90,6 @@ exports.addMinfoV2 = async (req, res) => {
         // }
         console.log(req.body);
         const createdMinfo = await Minfo.create(req.body)
-
         await Minfo.findByIdAndUpdate(createdMinfo._id, {
             $push: [{
                 type: req.body.type,
@@ -105,9 +97,69 @@ exports.addMinfoV2 = async (req, res) => {
                 owner: req.body.owner,
                 ram: req.body.ram,
                 systeme: req.body.systeme,
-                application: req.body.application
+                application: req.body.application,
+                typecons: req.body.typecons
             }],
-        }, { new: true })
+        }, { new: true }
+        )
+        res.json(createdMinfo);
+        const updatedConsinfo = await Consinfo.findByIdAndUpdate(req.body.typecons, { $push: { minfo: createdMinfo._id } }, { new: true })
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+exports.addMinfoV3 = async (req, res) => {
+    try {
+        // 
+        if (mongoose.Types.ObjectId.isValid(req.body.type) == false) {
+            delete req.body.type
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.Marque) == false) {
+            delete req.body.Marque
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.service) == false) {
+            delete req.body.service
+        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.SerialNumber) == false) {
+        //     delete req.body.SerialNumber
+        // }
+        if (mongoose.Types.ObjectId.isValid(req.body.owner) == false) {
+            delete req.body.owner
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.ram) == false) {
+            delete req.body.ram
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.systeme) == false) {
+            delete req.body.systeme
+        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.domaine) == false) {
+        //     delete req.body.domaine
+        // }
+        if (mongoose.Types.ObjectId.isValid(req.body.application) == false) {
+            delete req.body.application
+        }
+        // if (mongoose.Types.ObjectId.isValid(req.body.situation) == false) {
+        //     delete req.body.situation
+        // }
+        console.log(req.body);
+        const createdMinfo = await Minfo.create(req.body)
+        const updatedConsinfo = await Consinfo.findByIdAndUpdate(req.body.typecons, { $push: { minfo: createdMinfo._id } }, { new: true })
+
+        // await Minfo.findByIdAndUpdate(createdMinfo._id, {
+        //     $push: [{
+        //         type: req.body.type,
+        //         Marque: req.body.Marque,
+        //         owner: req.body.owner,
+        //         ram: req.body.ram,
+        //         systeme: req.body.systeme,
+        //         application: req.body.application,
+        //         typecons: req.body.typecons
+        //     }],
+        // }, { new: true }
+        // )
         res.json(createdMinfo);
     }
     catch (err) {
@@ -115,6 +167,23 @@ exports.addMinfoV2 = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+// try {
+//     const createdMinfo = await Service.create(req.body)
+//     const updatedMinfo = await Service.findByIdAndUpdate(createdService._id, { $push: { owners: req.body.owner } }, { new: true })
+//         console.log('ownerrrr',(req.body.owner).length);
+//        //affect service to the owners
+//         for (let i = 0; i < (req.body.owner).length; i++) {
+//         const updatedOwner = await Owner.findByIdAndUpdate(req.body.owner[i], { $push: { service: createdService._id } }, { new: true })
+//          }
+// }
+// catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: 'Internal server error' });
+// }
+// }
+
+
 //remove by Id materiel Contoller
 exports.removeMinfo = async (req, res) => {
     try {

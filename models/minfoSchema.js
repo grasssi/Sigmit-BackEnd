@@ -10,6 +10,7 @@ const minfoSchema = new Schema({
     ram: { type: Schema.Types.ObjectId, ref: 'ram' },
     systeme: { type: Schema.Types.ObjectId, ref: 'systeme' },
     application: { type: Schema.Types.ObjectId, ref: 'application' },
+    typecons: { type: Schema.Types.ObjectId, ref: 'consinfo' },
     date: { type: String, format: Date },
     place: { type: String },
     domaine: { type: String },
