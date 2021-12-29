@@ -20,4 +20,8 @@ router.delete('/removeowner/:id', Ownercontroller.removeOwner)
 //get one owner by id
 router.get('/getowner/:id', Ownercontroller.getOwner)
 
+//get all owners by service 
+router.get('/allownersbys/:id',Ownercontroller.allOwnersBys)
+
+
 module.exports = router;

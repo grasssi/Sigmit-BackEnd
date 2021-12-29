@@ -1,5 +1,5 @@
 const Owner = require('../models/ownerSchema')
-const Service=require('../models/serviceSchema')
+const Service = require('../models/serviceSchema')
 
 // get all owners
 exports.allOwners = async (req, res) => {
@@ -15,7 +15,7 @@ exports.allOwners = async (req, res) => {
 //all owners without service
 exports.allOwnersWs = async (req, res) => {
     try {
-        const owners = await Owner.find({service : null});
+        const owners = await Owner.find({ service: null });
         res.json(owners);
     }
     catch (err) {
@@ -24,11 +24,22 @@ exports.allOwnersWs = async (req, res) => {
     }
 }
 
+//all owners by service
+exports.allOwnersBys = async (req, res) => {
+    try {
+        const ownersbys = await Owner.find({ service: req.params.id });
+        res.json(ownersbys);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 //add one owner
 exports.addOwner = async (req, res) => {
     try {
         const createdOwner = await Owner.create(req.body)
-        console.log('owners=',req.body.service);
+        console.log('owners=', req.body.service);
         const updatedService = await Service.findByIdAndUpdate(req.body.service, { $push: { owners: req.params.idOwner } }, { new: true })
         res.json(createdOwner);
     }
